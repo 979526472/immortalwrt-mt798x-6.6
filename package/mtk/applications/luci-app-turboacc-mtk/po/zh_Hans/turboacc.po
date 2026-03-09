@@ -198,3 +198,5 @@ msgstr "HNAT PPE数量"
 msgid "Bind Entrys"
 msgstr "已绑定连接数"
 
+msgid "Conntrack Entrys"
+msgstr "活动连接"
