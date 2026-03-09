@@ -145,6 +145,23 @@ return view.extend({
 								progressbar(parseInt(res[0].Conntrack_Count), parseInt(res[0].Conntrack_Max))
 							).innerHTML;
 						}
+						/* add CPU Usage */
+                        var cpu_usage_elem = document.getElementById('CPU_Usage_entry');
+                        if (cpu_usage_elem && res[0].CPU_USED) {
+                            var cpu_text = res[0].CPU_USED;
+                            if (res[0].CPU_CORES_USED) {
+                                var cores_text = [];
+                                for (var core in res[0].CPU_CORES_USED) {
+                                    if (res[0].CPU_CORES_USED.hasOwnProperty(core)) {
+                                        cores_text.push(core + ': ' + res[0].CPU_CORES_USED[core]);
+                                    }
+                                }
+                                if (cores_text.length > 0) {
+                                    cpu_text += ' (' + cores_text.join(', ') + ')';
+                                }
+                            }
+                            cpu_usage_elem.innerHTML = E('em', {}, cpu_text).innerHTML;
+                        }
 					});
 				}, 2);
 
@@ -164,6 +181,23 @@ return view.extend({
 					  progressbar(parseInt(ppe_stats.Conntrack_Count), parseInt(ppe_stats.Conntrack_Max))
 					)
 				]));
+				/* add CPU Usage */
+                var initial_cpu_text = ppe_stats.CPU_USED || '0%';
+                if (ppe_stats.CPU_CORES_USED) {
+                    var initial_cores_text = [];
+                    for (var core in ppe_stats.CPU_CORES_USED) {
+                        if (ppe_stats.CPU_CORES_USED.hasOwnProperty(core)) {
+                            initial_cores_text.push(core + ': ' + ppe_stats.CPU_CORES_USED[core]);
+                        }
+                    }
+                    if (initial_cores_text.length > 0) {
+                        initial_cpu_text += ' (' + initial_cores_text.join(', ') + ')';
+                    }
+                }
+                acc_status.appendChild(E('tr', {}, [
+                    E('td', { 'width': '33%' }, _('CPU Usage')),
+                    E('td', { 'id': 'CPU_Usage_entry' }, E('em', {}, initial_cpu_text))
+                ]));
 			}
 
 			return E('fieldset', { 'class': 'cbi-section' }, [
